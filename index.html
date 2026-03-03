@@ -10,7 +10,7 @@
     --gold: #D4A017;
     --bright-gold: #FFD700;
     --orange: #E8641A;
-    --bg-black: #0c0c0c;
+    --bg-maroon: #5D0E17; /* Gujarati themed deep maroon */
     --cream: #FFF8E7;
   }
 
@@ -18,7 +18,7 @@
 
   body {
     font-family: 'Poppins', sans-serif;
-    background-color: var(--bg-black);
+    background-color: var(--bg-maroon);
     color: var(--cream);
     height: 100vh;
     overflow: hidden;
@@ -26,7 +26,7 @@
     user-select: none;
   }
 
-  /* Glowing Gold Frame */
+  /* Elegant Glowing Gold Frame */
   .frame {
     position: fixed;
     inset: 20px;
@@ -37,7 +37,7 @@
     box-shadow: inset 0 0 30px rgba(212,160,23,0.2), 0 0 20px rgba(212,160,23,0.2);
   }
 
-  /* Elegant Mandala Corners */
+  /* Subtle Mandala Corners */
   .corner {
     position: fixed;
     width: 300px;
@@ -70,7 +70,7 @@
 
   .slide.active { opacity: 1; transform: scale(1); pointer-events: auto; }
 
-  /* Animation for Reveals */
+  /* Revelation Animation for Answers */
   .slide.active[data-type="answer"] .answer-text {
     animation: celebrateText 1s forwards;
   }
@@ -79,7 +79,7 @@
     100% { transform: scale(1); opacity: 1; filter: blur(0); }
   }
 
-  /* --- TEXT SIZES FOR PROJECTOR --- */
+  /* Massive Font Styles */
   .main-title {
     font-family: 'Playfair Display', serif;
     font-size: clamp(2.8rem, 6.5vw, 6.5rem);
@@ -159,23 +159,23 @@
     text-shadow: 0 10px 30px rgba(0,0,0,0.5);
   }
 
-  /* Finale Spacing fix */
+  /* Finale Spacing fix - No scrolling */
   .slide-final {
     justify-content: center;
     padding: 40px 10%;
-    gap: 1.5vh;
+    gap: 1.2vh;
   }
 
   .final-poetry {
-    font-size: clamp(0.95rem, 1.75vw, 1.35rem);
-    line-height: 1.35;
+    font-size: clamp(0.9rem, 1.7vw, 1.3rem);
+    line-height: 1.3;
     color: #ddd;
-    max-width: 1250px;
+    max-width: 1200px;
   }
 
   .final-poetry span.gujarati {
-    margin-top: 1px;
-    margin-bottom: 5px;
+    margin-top: 2px;
+    margin-bottom: 6px;
   }
 
   .final-quote-box {
@@ -183,14 +183,14 @@
     border-top: 1px solid var(--gold);
     border-bottom: 1px solid var(--gold);
     padding: 15px 30px;
-    font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+    font-size: clamp(1.4rem, 3vw, 2.4rem);
     color: var(--bright-gold);
     font-weight: 700;
     width: 100%;
     margin-top: 5px;
   }
 
-  /* Nav buttons */
+  /* Navigation bar */
   #nav {
     position: fixed;
     bottom: 30px;
@@ -225,7 +225,7 @@
     <div style="font-family: 'Dancing Script', cursive; font-size: 2.8rem; color: var(--orange); margin-top:20px;">
       Celebrating 90 Amazing Years 💛 / ૯૦ વર્ષની શાનદાર ઉજવણી
     </div>
-    <div style="margin-top:20px; letter-spacing: 6px; color:rgba(212,160,23,0.4); font-size: 1.1rem;">MANDVI NI SHAAN • FAMILY NI JAAN • 90 YEARS OF LOVE</div>
+    <div style="margin-top:20px; letter-spacing: 6px; color:rgba(212,160,23,0.6); font-size: 1.1rem;">MANDVI NI SHAAN • FAMILY NI JAAN • 90 YEARS OF LOVE</div>
   </div>
 
   <div class="slide">
@@ -273,14 +273,14 @@
   <div class="slide"><div class="main-title" style="font-size: 6rem;">💍 Round 2<br><span class="gujarati" style="font-size: 0.6em;">Life & Marriage / જીવન અને લગ્ન</span></div></div>
 
   <div class="slide"><div class="q-meta">QUESTION 5</div><div class="question-text">True or False: She met her husband before marriage<br><span class="gujarati">સાચું કે ખોટું: લગ્ન પહેલાં તે તેમના પતિને મળ્યા હતા.</span></div></div>
-  <div class="slide" data-type="answer"><div class="q-meta">ANSWER 5</div><div class="answer-text">False! 😄</div><div class="gujarati" style="font-size: 3rem;">First meeting = Wedding day!</div></div>
+  <div class="slide" data-type="answer"><div class="q-meta">ANSWER 5</div><div class="answer-text">False! 😄</div><div class="gujarati" style="font-size: 3.5rem;">First meeting = Wedding day!</div></div>
 
   <div class="slide"><div class="q-meta">QUESTION 6</div><div class="question-text">After marriage, what unique thing did her husband do?<br><span class="gujarati">લગ્ન પછી તેમના પતિએ કઈ અનોખી વસ્તુ કરી હતી?</span></div>
     <div class="options-grid">
       <div class="option"><div class="opt-letter">A</div>Took her abroad / વિદેશ લઈ ગયા</div>
       <div class="option"><div class="opt-letter">B</div>Changed her name / નામ બદલ્યું</div>
       <div class="option"><div class="opt-letter">C</div>Bought her a house / ઘર ખરીદ્યું</div>
-      <div class="option"><div class="opt-letter">D</div>Started a business / વ્યવસાય શરૂ કર્યો</div>
+      <div class="option"><div class="opt-letter">D</div>Started a business / વ્યવસાય કર્યો</div>
     </div>
   </div>
   <div class="slide" data-type="answer"><div class="q-meta">ANSWER 6</div><div class="answer-text">B) Changed her name! ✨</div></div>
@@ -396,7 +396,7 @@
     
     <div class="final-quote-box">
       “Everything we are today… has a little bit of her in it.”<br>
-      <span class="gujarati" style="font-size: 1.35rem; margin-top: 4px;">“આજે આપણે જે કંઈ છીએ... તેમાં તેનો થોડો અંશ છે.”</span>
+      <span class="gujarati" style="font-size: 1.3rem; margin-top: 4px;">“આજે આપણે જે કંઈ છીએ... તેમાં તેનો થોડો અંશ છે.”</span>
     </div>
   </div>
 
@@ -404,7 +404,7 @@
 
 <div id="nav">
   <button class="nav-btn" onclick="prevSlide()">←</button>
-  <div id="counter">1 / 39</div>
+  <div id="counter">1 / 44</div>
   <button class="nav-btn" onclick="nextSlide()">→</button>
 </div>
 
@@ -426,4 +426,3 @@
 </script>
 </body>
 </html>
-
