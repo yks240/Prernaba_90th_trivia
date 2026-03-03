@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prernaba's 90th Trivia App 🏆</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   :root {
     --gold: #D4A017;
@@ -21,6 +22,7 @@
     background-color: var(--bg-maroon);
     color: var(--cream);
     height: 100vh;
+    width: 100vw;
     overflow: hidden;
     user-select: none;
   }
@@ -35,7 +37,7 @@
     box-shadow: inset 0 0 30px rgba(212,160,23,0.2);
   }
 
-  #app { position: relative; width: 100vw; height: 100vh; z-index: 10; }
+  #app { position: relative; width: 100%; height: 100%; z-index: 10; }
 
   .slide {
     position: absolute;
@@ -44,17 +46,17 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 60px 10%;
+    padding: 5% 10%;
     text-align: center;
   }
 
   .slide.active { display: flex; }
 
-  .q-meta { font-size: 1.5rem; letter-spacing: 8px; color: var(--gold); margin-bottom: 20px; opacity: 0.6; }
+  .q-meta { font-size: clamp(1rem, 2vw, 1.5rem); letter-spacing: 8px; color: var(--gold); margin-bottom: 20px; opacity: 0.6; }
   
   .question-text {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 4.5vw, 4.2rem);
+    font-size: clamp(1.8rem, 4.5vw, 4.2rem);
     line-height: 1.2;
     max-width: 1400px;
     opacity: 0;
@@ -66,22 +68,22 @@
   .options-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 15px;
     width: 100%;
     max-width: 1200px;
-    margin-top: 40px;
+    margin-top: 30px;
   }
 
   .option {
     background: rgba(255,255,255,0.05);
     border: 2px solid rgba(212,160,23,0.3);
     border-radius: 12px;
-    padding: 20px;
-    font-size: clamp(1.2rem, 2.2vw, 2rem);
+    padding: clamp(10px, 2vw, 20px);
+    font-size: clamp(1rem, 2.2vw, 1.8rem);
     text-align: left;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     opacity: 0;
     transform: translateY(30px);
     transition: all 0.5s ease;
@@ -96,11 +98,11 @@
   .opt-letter {
     background: var(--gold);
     color: #000;
-    width: 50px;
-    height: 50px;
+    width: clamp(35px, 4vw, 50px);
+    height: clamp(35px, 4vw, 50px);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 1.4rem;
+    font-weight: 900; font-size: clamp(0.9rem, 2vw, 1.4rem);
   }
 
   .slide.revealed .option:not(.correct) { opacity: 0.1; filter: grayscale(1); transform: scale(0.95); }
@@ -108,28 +110,30 @@
     border-color: var(--bright-gold);
     box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
     background: rgba(212, 160, 23, 0.2);
-    transform: scale(1.08);
+    transform: scale(1.05);
   }
 
   .answer-reveal {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-size: clamp(2.5rem, 8vw, 6.5rem);
     font-weight: 900;
     color: var(--bright-gold);
-    margin-top: 30px;
+    margin-top: 20px;
     opacity: 0;
     transform: translateY(20px);
     transition: all 0.6s ease;
   }
   .slide.revealed .answer-reveal { opacity: 1; transform: translateY(0); }
 
-  .slide-final { justify-content: center; gap: 1vh; }
-  .final-poetry { font-size: clamp(0.9rem, 1.6vw, 1.25rem); line-height: 1.35; color: #ddd; max-width: 1250px; }
-  .final-quote-box {
-    background: linear-gradient(90deg, transparent, rgba(212,160,23,0.1), transparent);
-    border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold);
-    padding: 15px; font-size: clamp(1.4rem, 2.8vw, 2.2rem); color: var(--bright-gold); font-weight: 700; width: 100%;
+  @media (max-width: 768px) {
+    .frame { inset: 10px; }
+    .options-grid { grid-template-columns: 1fr; gap: 10px; }
+    .slide { padding: 40px 15px; }
+    #qrcode-container { transform: scale(0.65); }
   }
+
+  #qrcode-container { margin-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  #qrcode { padding: 10px; background: white; border-radius: 10px; }
 
   #nav-back { position: fixed; top: 0; left: 0; width: 20%; height: 100%; z-index: 1000; cursor: w-resize; }
   #nav-forward { position: fixed; top: 0; right: 0; width: 80%; height: 100%; z-index: 999; cursor: e-resize; }
@@ -147,255 +151,105 @@
     <div class="question-text" style="opacity:1; transform:none;">
       <div style="font-size: 1.2em; color: var(--gold); font-weight: 900;">🎉 How Well Do You Know Prernaba? 🎉</div>
       <span class="gujarati">પ્રેરણાબાને તમે કેટલું જાણો છો?</span>
-      <div style="font-family: 'Dancing Script', cursive; font-size: 0.6em; color: var(--orange); margin-top:20px;">Celebrating 90 Amazing Years 💛 / ૯૦ વર્ષની શાનદાર ઉજવણી</div>
-      <div style="font-size: 0.25em; letter-spacing: 6px; color:rgba(212,160,23,0.4); margin-top:30px;">MANDVI NI SHAAN • FAMILY NI JAAN • 90 YEARS OF LOVE</div>
+      
+      <div id="qrcode-container">
+        <div id="qrcode"></div>
+        <p style="font-size: 0.2em; color: var(--gold); letter-spacing: 2px;">SCAN TO PLAY ON YOUR PHONE</p>
+      </div>
+
+      <div style="font-family: 'Dancing Script', cursive; font-size: 0.5em; color: var(--orange); margin-top:15px;">Celebrating 90 Amazing Years 💛 / ૯૦ વર્ષની શાનદાર ઉજવણી</div>
+      <div style="font-size: 0.25em; letter-spacing: 6px; color:rgba(212,160,23,0.4); margin-top:20px;">MANDVI NI SHAAN • FAMILY NI JAAN • 90 YEARS OF LOVE</div>
     </div>
   </div>
 
   <div class="slide" data-steps="1">
     <div class="q-meta">🎤 HOW TO PLAY</div>
-    <div class="question-text">Answer as a table/team! / ટીમ તરીકે જવાબ આપો<br>Shout it out! / બૂમ પાડો!<br>No Googling! 😄</div>
-  </div>
-
-  <div class="slide" data-steps="1">
-    <div class="question-text" style="font-size: 6rem; color: var(--gold);">🌊 Round 1<br><span class="gujarati" style="font-size: 0.6em;">Roots & Early Life</span></div>
-  </div>
-
-  <div class="slide" data-steps="2">
-    <div class="q-meta">QUESTION 1</div>
-    <div class="question-text">Prernaba was born and raised in ________<br><span class="gujarati">પ્રેરણાબાનો જન્મ અને ઉછેર ________ માં થયો હતો.</span></div>
-    <div class="answer-reveal">Mandvi, Kutch 🏘️<br><span class="gujarati" style="font-size: 0.5em;">માંડવી, કચ્છ 💛</span></div>
-  </div>
-
-  <div class="slide" data-steps="3">
-    <div class="q-meta">QUESTION 2</div>
-    <div class="question-text">Which school did Prernaba attend?<br><span class="gujarati">પ્રેરણાબા કઈ શાળામાં ભણ્યા હતા?</span></div>
-    <div class="options-grid">
-      <div class="option correct"><div class="opt-letter">A</div>G.T. High School / જી.ટી. હાઈસ્કૂલ</div>
-      <div class="option"><div class="opt-letter">B</div>Khimji Ramdas / ખીમજી રામદાસ</div>
-      <div class="option"><div class="opt-letter">C</div>St. Xavier’s / સેન્ટ ઝેવિયર્સ</div>
-      <div class="option"><div class="opt-letter">D</div>SNDT / એસ.એન.ડી.ટી</div>
+    <div class="question-text" style="font-size: clamp(1.8rem, 4vw, 3rem);">
+      Answer as a table/team!<br>
+      Shout it out! / બૂમ પાડો!<br>
+      No Googling! 😄
     </div>
   </div>
 
-  <div class="slide" data-steps="2">
-    <div class="q-meta">QUESTION 3</div>
-    <div class="question-text">True or False: Her school was co-ed<br><span class="gujarati">સાચું કે ખોટું: તેમની શાળા કો-એડ હતી</span></div>
-    <div class="answer-reveal">False! ❌<br><span class="gujarati" style="font-size: 0.5em;">Girls' School! / કન્યાશાળા હતી!</span></div>
-  </div>
-
-  <div class="slide" data-steps="3">
-    <div class="q-meta">QUESTION 4</div>
-    <div class="question-text">For her matric exams, Prernaba traveled to:<br><span class="gujarati">મેટ્રિકની પરીક્ષા માટે પ્રેરણાબા ક્યાં ગયા હતા?</span></div>
-    <div class="options-grid">
-      <div class="option"><div class="opt-letter">A</div>Ahmedabad / અમદાવાદ</div>
-      <div class="option"><div class="opt-letter">B</div>Mumbai / મુંબઈ</div>
-      <div class="option correct"><div class="opt-letter">C</div>Rajkot / રાજકોટ</div>
-      <div class="option"><div class="opt-letter">D</div>Bhuj / ભુજ</div>
-    </div>
-  </div>
-
-  <div class="slide" data-steps="1">
-    <div class="question-text" style="font-size: 6rem; color: var(--gold);">💍 Round 2<br><span class="gujarati" style="font-size: 0.6em;">Life & Marriage</span></div>
-  </div>
-
-  <div class="slide" data-steps="2">
-    <div class="q-meta">QUESTION 5</div>
-    <div class="question-text">True or False: She met her husband before marriage<br><span class="gujarati">સાચું કે ખોટું: લગ્ન પહેલાં તે તેમના પતિને મળ્યા હતા.</span></div>
-    <div class="answer-reveal">False! 😄<br><span class="gujarati" style="font-size: 0.5em;">First meeting = Wedding day!</span></div>
-  </div>
-
-  <div class="slide" data-steps="3">
-    <div class="q-meta">QUESTION 6</div>
-    <div class="question-text">After marriage, what unique thing did her husband do?<br><span class="gujarati">લગ્ન પછી તેમના પતિએ કઈ અનોખી વસ્તુ કરી હતી?</span></div>
-    <div class="options-grid">
-      <div class="option"><div class="opt-letter">A</div>Took her abroad / વિદેશ લઈ ગયા</div>
-      <div class="option correct"><div class="opt-letter">B</div>Changed her name / નામ બદલ્યું</div>
-      <div class="option"><div class="opt-letter">C</div>Bought her a house / ઘર ખરીદ્યું</div>
-      <div class="option"><div class="opt-letter">D</div>Started a business / વ્યવસાય કર્યો</div>
-    </div>
-  </div>
-
-  <div class="slide" data-steps="2">
-    <div class="q-meta">QUESTION 7</div>
-    <div class="question-text">Prernaba's name before marriage was ________<br><span class="gujarati">લગ્ન પહેલાં પ્રેરણાબાનું નામ ________ હતું.</span></div>
-    <div class="answer-reveal">Hiranyamayi ✨<br><span class="gujarati" style="font-size: 0.5em;">હિરણ્યમયી</span></div>
-  </div>
-
-  <div class="slide" data-steps="1">
-    <div class="question-text" style="font-size: 6rem; color: var(--gold);">👩‍🍳 Round 3<br><span class="gujarati" style="font-size: 0.6em;">Master Chef Prernaba</span></div>
-  </div>
-
-  <div class="slide" data-steps="2">
-    <div class="q-meta">QUESTION 8</div>
-    <div class="question-text">True or False: She has judged cooking competitions<br><span class="gujarati">સાચું કે ખોટું: તેમણે રસોઈ સ્પર્ધાઓમાં જજ તરીકે સેવા આપી છે.</span></div>
-    <div class="answer-reveal">True! 👩‍🍳</div>
-  </div>
-
-  <div class="slide" data-steps="3">
-    <div class="q-meta">QUESTION 9</div>
-    <div class="question-text">How many cooking contests has she won?<br><span class="gujarati">તેમણે કેટલી રસોઈ સ્પર્ધાઓ જીતી છે?</span></div>
-    <div class="options-grid">
-      <div class="option"><div class="opt-letter">A</div>1–2</div>
-      <div class="option"><div class="opt-letter">B</div>3–5</div>
-      <div class="option correct"><div class="opt-letter">C</div>Too many to count! 😄</div>
-      <div class="option"><div class="opt-letter">D</div>None / એક પણ નહીં</div>
-    </div>
-  </div>
-
-  <div class="slide" data-steps="2">
-    <div class="q-meta">QUESTION 10</div>
-    <div class="question-text">“Once you eat Prernaba na haath nu ________, you won’t like any other ________.”<br><span class="gujarati">“એકવાર તમે પ્રેરણાબાના હાથની ________ ખાઓ, પછી તમને બીજું કંઈ ગમે નહીં.”</span></div>
-    <div class="answer-reveal">Every Answer Wins! 😋</div>
-  </div>
-
-  <div class="slide" data-steps="3">
-    <div class="q-meta">QUESTION 11</div>
-    <div class="question-text">Which unique dish did Prernaba make for Sanjidada?<br><span class="gujarati">પ્રેરણાબાએ સંજીદાદા માટે કઈ અનોખી વાનગી બનાવી હતી?</span></div>
-    <div class="options-grid">
-      <div class="option"><div class="opt-letter">A</div>Karela no halwo / હલવો</div>
-      <div class="option"><div class="opt-letter">B</div>Shingoda na muthiya / મુઠિયા</div>
-      <div class="option correct"><div class="opt-letter">C</div>Eggs wali bhakhri 🍳 / ભાખરી</div>
-      <div class="option"><div class="opt-letter">D</div>Apple ni khichdi / ખીચડી</div>
-    </div>
-  </div>
-
-  <div class="slide" data-steps="1">
-    <div class="question-text" style="font-size: 6rem; color: var(--gold);">📰 Round 4<br><span class="gujarati" style="font-size: 0.6em;">Habits & Personality</span></div>
-  </div>
-
-  <div class="slide" data-steps="2">
-    <div class="q-meta">QUESTION 12</div>
-    <div class="question-text">True or False: She reads Gujarat Samachar cover to cover daily<br><span class="gujarati">સાચું કે ખોટું: તે દરરોજ ગુજરાત સમાચાર આખું વાંચે છે.</span></div>
-    <div class="answer-reveal">True! 📰</div>
-  </div>
-
-  <div class="slide" data-steps="3">
-    <div class="q-meta">QUESTION 13</div>
-    <div class="question-text">Her favorite magazine is:<br><span class="gujarati">તેમનું પ્રિય મેગેઝિન કયું છે?</span></div>
-    <div class="options-grid">
-      <div class="option"><div class="opt-letter">A</div>India Today</div>
-      <div class="option correct"><div class="opt-letter">B</div>Chitralekha / ચિત્રલેખા</div>
-      <div class="option"><div class="opt-letter">C</div>Femina</div>
-      <div class="option"><div class="opt-letter">D</div>Outlook</div>
-    </div>
-  </div>
-
-  <div class="slide" data-steps="3">
-    <div class="q-meta">QUESTION 14</div>
-    <div class="question-text">Even at 90, Prernaba:<br><span class="gujarati">૯૦ વર્ષની ઉંમરે પણ પ્રેરણાબા:</span></div>
-    <div class="options-grid">
-      <div class="option"><div class="opt-letter">A</div>Avoids reading / વાંચવાનું ટાળે છે</div>
-      <div class="option"><div class="opt-letter">B</div>Needs help / મદદની જરૂર પડે છે</div>
-      <div class="option correct"><div class="opt-letter">C</div>Has sharp eyesight / તેજ નજર છે</div>
-      <div class="option"><div class="opt-letter">D</div>Only watches TV / ફક્ત ટીવી જુએ છે</div>
-    </div>
-  </div>
-
-  <div class="slide" data-steps="1">
-    <div class="question-text" style="font-size: 6rem; color: var(--gold);">📺 Round 5<br><span class="gujarati" style="font-size: 0.6em;">Fun & Quirky</span></div>
-  </div>
-
-  <div class="slide" data-steps="3">
-    <div class="q-meta">QUESTION 15</div>
-    <div class="question-text">Prernaba's favorite snack is:<br><span class="gujarati">પ્રેરણાબાનો પ્રિય નાસ્તો કયો છે?</span></div>
-    <div class="options-grid">
-      <div class="option"><div class="opt-letter">A</div>Chavanu / ચવાણું</div>
-      <div class="option correct"><div class="opt-letter">B</div>Ganthiya / ગાંઠિયા</div>
-      <div class="option"><div class="opt-letter">C</div>Chevdo / ચેવડો</div>
-      <div class="option"><div class="opt-letter">D</div>Mamra / મમરા</div>
-    </div>
-  </div>
-
-  <div class="slide" data-steps="3">
-    <div class="q-meta">QUESTION 16</div>
-    <div class="question-text">What is Prernaba’s favorite TV show?<br><span class="gujarati">પ્રેરણાબાનો પ્રિય ટીવી શો કયો છે?</span></div>
-    <div class="options-grid">
-      <div class="option"><div class="opt-letter">A</div>TMKOC</div>
-      <div class="option"><div class="opt-letter">B</div>Indian Idol</div>
-      <div class="option"><div class="opt-letter">C</div>Saas-bahu serial 😄</div>
-      <div class="option correct"><div class="opt-letter">D</div>KBC 🎤</div>
-    </div>
-  </div>
-
-  <div class="slide" data-steps="2">
-    <div class="q-meta">QUESTION 17</div>
-    <div class="question-text">True or False: After US trips, she brought back life lessons? ❤️<br><span class="gujarati">સાચું કે ખોટું: તે યુ.એસ. થી જીવનના હકારાત્મક પાઠ લાવતા હતા?</span></div>
-    <div class="answer-reveal">True! ❤️</div>
-  </div>
-
-  <div class="slide" data-steps="3">
-    <div class="q-meta">QUESTION 18</div>
-    <div class="question-text">What was the REAL purpose of her U.S. trips?<br><span class="gujarati">તેમની યુ.એસ. યાત્રાઓનો સાચો હેતુ શું હતો?</span></div>
-    <div class="options-grid">
-      <div class="option"><div class="opt-letter">A</div>Sightseeing / ફરવા</div>
-      <div class="option"><div class="opt-letter">B</div>Food / જમવા</div>
-      <div class="option"><div class="opt-letter">C</div>Vacation / વેકેશન</div>
-      <div class="option correct"><div class="opt-letter">D</div>Raising her great-grandkids / વડ-પૌત્રોને ઉછેરવા</div>
-    </div>
-  </div>
+  <div class="slide" data-steps="1"><div class="question-text" style="font-size: 6rem; color: var(--gold);">🌊 Round 1<br><span class="gujarati" style="font-size: 0.6em;">Roots & Early Life</span></div></div>
+  <div class="slide" data-steps="2"><div class="q-meta">QUESTION 1</div><div class="question-text">Prernaba was born and raised in ________<br><span class="gujarati">પ્રેરણાબાનો જન્મ અને ઉછેર ________ માં થયો હતો.</span></div><div class="answer-reveal">Mandvi, Kutch 🏘️</div></div>
+  <div class="slide" data-steps="3"><div class="q-meta">QUESTION 2</div><div class="question-text">Which school did Prernaba attend?<br><span class="gujarati">પ્રેરણાબા કઈ શાળામાં ભણ્યા હતા?</span></div><div class="options-grid"><div class="option correct"><div class="opt-letter">A</div>G.T. High School</div><div class="option"><div class="opt-letter">B</div>Khimji Ramdas</div><div class="option"><div class="opt-letter">C</div>St. Xavier’s</div><div class="option"><div class="opt-letter">D</div>SNDT</div></div></div>
+  <div class="slide" data-steps="2"><div class="q-meta">QUESTION 3</div><div class="question-text">True or False: Her school was co-ed<br><span class="gujarati">સાચું કે ખોટું: તેમની શાળા કો-એડ હતી</span></div><div class="answer-reveal">False! ❌</div></div>
+  <div class="slide" data-steps="3"><div class="q-meta">QUESTION 4</div><div class="question-text">For her matric exams, Prernaba traveled to:<br><span class="gujarati">મેટ્રિકની પરીક્ષા માટે પ્રેરણાબા ક્યાં ગયા હતા?</span></div><div class="options-grid"><div class="option"><div class="opt-letter">A</div>Ahmedabad</div><div class="option"><div class="opt-letter">B</div>Mumbai</div><div class="option correct"><div class="opt-letter">C</div>Rajkot</div><div class="option"><div class="opt-letter">D</div>Bhuj</div></div></div>
+  <div class="slide" data-steps="1"><div class="question-text" style="font-size: 6rem; color: var(--gold);">💍 Round 2<br><span class="gujarati" style="font-size: 0.6em;">Life & Marriage</span></div></div>
+  <div class="slide" data-steps="2"><div class="q-meta">QUESTION 5</div><div class="question-text">True or False: She met her husband before marriage<br><span class="gujarati">સાચું કે ખોટું: લગ્ન પહેલાં તે તેમના પતિને મળ્યા હતા.</span></div><div class="answer-reveal">False! 😄</div></div>
+  <div class="slide" data-steps="3"><div class="q-meta">QUESTION 6</div><div class="question-text">After marriage, what unique thing did her husband do?<br><span class="gujarati">લગ્ન પછી તેમના પતિએ કઈ અનોખી વસ્તુ કરી હતી?</span></div><div class="options-grid"><div class="option"><div class="opt-letter">A</div>Took her abroad</div><div class="option correct"><div class="opt-letter">B</div>Changed her name</div><div class="option"><div class="opt-letter">C</div>Bought her a house</div><div class="option"><div class="opt-letter">D</div>Started a business</div></div></div>
+  <div class="slide" data-steps="2"><div class="q-meta">QUESTION 7</div><div class="question-text">Prernaba's name before marriage was ________<br><span class="gujarati">લગ્ન પહેલાં પ્રેરણાબાનું નામ ________ હતું.</span></div><div class="answer-reveal">Hiranyamayi ✨</div></div>
+  <div class="slide" data-steps="1"><div class="question-text" style="font-size: 6rem; color: var(--gold);">👩‍🍳 Round 3<br><span class="gujarati" style="font-size: 0.6em;">Master Chef Prernaba</span></div></div>
+  <div class="slide" data-steps="2"><div class="q-meta">QUESTION 8</div><div class="question-text">True or False: She has judged cooking competitions<br><span class="gujarati">સાચું કે ખોટું: તેમણે રસોઈ સ્પર્ધાઓમાં જજ તરીકે સેવા આપી છે.</span></div><div class="answer-reveal">True! 👩‍🍳</div></div>
+  <div class="slide" data-steps="3"><div class="q-meta">QUESTION 9</div><div class="question-text">How many cooking contests has she won?<br><span class="gujarati">તેમણે કેટલી રસોઈ સ્પર્ધાઓ જીતી છે?</span></div><div class="options-grid"><div class="option"><div class="opt-letter">A</div>1–2</div><div class="option"><div class="opt-letter">B</div>3–5</div><div class="option correct"><div class="opt-letter">C</div>Too many to count! 😄</div><div class="option"><div class="opt-letter">D</div>None</div></div></div>
+  <div class="slide" data-steps="2"><div class="q-meta">QUESTION 10</div><div class="question-text">“Once you eat Prernaba na haath nu ________, you won’t like any other ________.”<br><span class="gujarati">“એકવાર તમે પ્રેરણાબાના હાથની ________ ખાઓ.”</span></div><div class="answer-reveal">Every Answer Wins! 😋</div></div>
+  <div class="slide" data-steps="3"><div class="q-meta">QUESTION 11</div><div class="question-text">Which unique dish did Prernaba make for Sanjidada?<br><span class="gujarati">પ્રેરણાબાએ સંજીદાદા માટે કઈ અનોખી વાનગી બનાવી હતી?</span></div><div class="options-grid"><div class="option"><div class="opt-letter">A</div>Karela no halwo</div><div class="option"><div class="opt-letter">B</div>Shingoda na muthiya</div><div class="option correct"><div class="opt-letter">C</div>Eggs wali bhakhri 🍳</div><div class="option"><div class="opt-letter">D</div>Apple ni khichdi</div></div></div>
+  <div class="slide" data-steps="1"><div class="question-text" style="font-size: 6rem; color: var(--gold);">📰 Round 4<br><span class="gujarati" style="font-size: 0.6em;">Habits & Personality</span></div></div>
+  <div class="slide" data-steps="2"><div class="q-meta">QUESTION 12</div><div class="question-text">True or False: She reads Gujarat Samachar cover to cover daily<br><span class="gujarati">સાચું કે ખોટું: તે દરરોજ ગુજરાત સમાચાર આખું વાંચે છે.</span></div><div class="answer-reveal">True! 📰</div></div>
+  <div class="slide" data-steps="3"><div class="q-meta">QUESTION 13</div><div class="question-text">Her favorite magazine is:<br><span class="gujarati">તેમનું પ્રિય મેગેઝિન કયું છે?</span></div><div class="options-grid"><div class="option"><div class="opt-letter">A</div>India Today</div><div class="option correct"><div class="opt-letter">B</div>Chitralekha / ચિત્રલેખા</div><div class="option"><div class="opt-letter">C</div>Femina</div><div class="option"><div class="opt-letter">D</div>Outlook</div></div></div>
+  <div class="slide" data-steps="3"><div class="q-meta">QUESTION 14</div><div class="question-text">Even at 90, Prernaba:<br><span class="gujarati">૯૦ વર્ષની ઉંમરે પણ પ્રેરણાબા:</span></div><div class="options-grid"><div class="option"><div class="opt-letter">A</div>Avoids reading</div><div class="option"><div class="opt-letter">B</div>Needs help</div><div class="option correct"><div class="opt-letter">C</div>Has sharp eyesight! 👁️</div><div class="option"><div class="opt-letter">D</div>Only watches TV</div></div></div>
+  <div class="slide" data-steps="1"><div class="question-text" style="font-size: 6rem; color: var(--gold);">📺 Round 5<br><span class="gujarati" style="font-size: 0.6em;">Fun & Quirky</span></div></div>
+  <div class="slide" data-steps="3"><div class="q-meta">QUESTION 15</div><div class="question-text">Prernaba's favorite snack is:<br><span class="gujarati">પ્રેરણાબાનો પ્રિય નાસ્તો કયો છે?</span></div><div class="options-grid"><div class="option"><div class="opt-letter">A</div>Chavanu / ચવાણું</div><div class="option correct"><div class="opt-letter">B</div>Ganthiya / ગાંઠિયા</div><div class="option"><div class="opt-letter">C</div>Chevdo / ચેવડો</div><div class="option"><div class="opt-letter">D</div>Mamra / મમરા</div></div></div>
+  <div class="slide" data-steps="3"><div class="q-meta">QUESTION 16</div><div class="question-text">What is Prernaba’s favorite TV show?<br><span class="gujarati">પ્રેરણાબાનો પ્રિય ટીવી શો કયો છે?</span></div><div class="options-grid"><div class="option"><div class="opt-letter">A</div>TMKOC</div><div class="option"><div class="opt-letter">B</div>Indian Idol</div><div class="option"><div class="opt-letter">C</div>Saas-bahu serial</div><div class="option correct"><div class="opt-letter">D</div>KBC 🎤</div></div></div>
+  <div class="slide" data-steps="2"><div class="q-meta">QUESTION 17</div><div class="question-text">True or False: After US trips, she brought back life lessons? ❤️<br><span class="gujarati">સાચું કે ખોટું: તે હકારાત્મક પાઠ લાવતા હતા?</span></div><div class="answer-reveal">True! ❤️</div></div>
+  <div class="slide" data-steps="3"><div class="q-meta">QUESTION 18</div><div class="question-text">What was the REAL purpose of her U.S. trips?<br><span class="gujarati">તેમની યુ.એસ. યાત્રાઓનો સાચો હેતુ શું હતો?</span></div><div class="options-grid"><div class="option"><div class="opt-letter">A</div>Sightseeing</div><div class="option"><div class="opt-letter">B</div>Food</div><div class="option"><div class="opt-letter">C</div>Vacation</div><div class="option correct"><div class="opt-letter">D</div>Raising her great-grandkids</div></div></div>
 
   <div class="slide slide-final show-q" data-steps="1">
     <div class="question-text" style="opacity:1; transform:none; color: #FFD700; font-size: 2.2rem; line-height:1.1;">✨ 90 Years of Love ✨<br><span class="gujarati" style="font-size: 0.5em;">૯૦ વર્ષનો પ્રેમ</span></div>
     <div class="final-poetry">
-      She didn’t just live 90 years... She built generations.<br><span class="gujarati">તેમણે માત્ર ૯૦ વર્ષ જીવ્યા નથી... તેમણે પેઢીઓનું ઘડતર કર્યું છે.</span><br><br>
-      She didn’t just cook meals... She created memories.<br><span class="gujarati">તેમણે માત્ર રસોઈ બનાવી નથી... તેમણે અમર યાદો બનાવી છે.</span><br><br>
-      She didn’t just visit... She shaped who we are today.<br><span class="gujarati">તેમણે માત્ર મુલાકાત લીધી નથી... આપણે આજે જે છીએ તે તેમના કારણે છીએ.</span>
+      She built generations... She created memories... She shaped who we are today.<br>
+      <span class="gujarati">તેમણે પેઢીઓનું ઘડતર કર્યું છે... આપણે આજે જે છીએ તે તેમના કારણે છીએ.</span>
     </div>
-    <div style="font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: var(--orange); line-height:1.1;">💛 WE LOVE YOU, PRENABA 💛</div>
+    <div style="font-family: 'Dancing Script', cursive; font-size: 2rem; color: var(--orange);">💛 WE LOVE YOU, PRENABA 💛</div>
     <div class="final-quote-box">“Everything we are today... has a little bit of her in it.”</div>
   </div>
 
 </div>
 
 <script>
-  let currentSlide = 0;
-  let currentStep = 1;
+  let currentSlide = 0, currentStep = 1;
   const slides = document.querySelectorAll('.slide');
 
-  function advance() {
-    const slide = slides[currentSlide];
-    const totalSteps = parseInt(slide.dataset.steps);
+  // Updated to use your specific URL
+  new QRCode(document.getElementById("qrcode"), {
+    text: "https://yks240.github.io/Prernaba_90th_trivia/",
+    width: 140, height: 140,
+    colorDark : "#000000", colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.H
+  });
 
+  function advance() {
+    const slide = slides[currentSlide], totalSteps = parseInt(slide.dataset.steps);
     if (currentStep < totalSteps) {
       currentStep++;
       if (currentStep === 2) slide.classList.add('show-opts');
       if (currentStep === 3 || (totalSteps === 2 && currentStep === 2)) slide.classList.add('revealed');
-    } else {
-      if (currentSlide < slides.length - 1) {
-        slide.classList.remove('active', 'show-q', 'show-opts', 'revealed');
-        currentSlide++;
-        currentStep = 1;
-        slides[currentSlide].classList.add('active');
-        setTimeout(() => slides[currentSlide].classList.add('show-q'), 50);
-      }
+    } else if (currentSlide < slides.length - 1) {
+      slide.classList.remove('active', 'show-q', 'show-opts', 'revealed');
+      currentSlide++; currentStep = 1;
+      slides[currentSlide].classList.add('active');
+      setTimeout(() => slides[currentSlide].classList.add('show-q'), 50);
     }
   }
 
   function goBack() {
     const slide = slides[currentSlide];
-    
     if (currentStep > 1) {
       if (currentStep === 3) slide.classList.remove('revealed');
-      else if (currentStep === 2) {
-        slide.classList.remove('revealed');
-        slide.classList.remove('show-opts');
-      }
+      else if (currentStep === 2) { slide.classList.remove('revealed', 'show-opts'); }
       currentStep--;
     } else if (currentSlide > 0) {
       slide.classList.remove('active', 'show-q', 'show-opts', 'revealed');
       currentSlide--;
-      const prevSlide = slides[currentSlide];
-      currentStep = parseInt(prevSlide.dataset.steps);
+      const prevSlide = slides[currentSlide]; currentStep = parseInt(prevSlide.dataset.steps);
       prevSlide.classList.add('active', 'show-q');
       if (currentStep >= 2) prevSlide.classList.add('show-opts');
-      if (currentStep === 3 || (parseInt(prevSlide.dataset.steps) === 2 && currentStep === 2)) {
-          prevSlide.classList.add('revealed');
-      }
+      if (currentStep === 3 || (parseInt(prevSlide.dataset.steps) === 2 && currentStep === 2)) prevSlide.classList.add('revealed');
     }
   }
 
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === ' ') advance();
     if (e.key === 'ArrowLeft' || e.key === 'Backspace') goBack();
   });
